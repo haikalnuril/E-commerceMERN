@@ -1,27 +1,20 @@
-import express from 'express';
-import asyncHandler from '../middlewares/asyncHanddler.js';
-import User from '../models/userModel.js';
+import express from "express";
+import { registerUser } from "../controllers/authController.js";
 
 const router = express.Router();
 
-router.post('/register', asyncHandler(async(req, res) => {
-        await User.create({
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-        });
-}));
+router.post("/register", registerUser);
 
-router.post('/login', (req, res) => {
-    res.send('Login');
+router.post("/login", (req, res) => {
+    res.send("Login");
 });
 
-router.get('/logout', (req, res) => {
-    res.send('Logout');
+router.get("/logout", (req, res) => {
+    res.send("Logout");
 });
 
-router.get('/getuser', (req, res) => {
-    res.send('Get User');
+router.get("/getuser", (req, res) => {
+    res.send("Get User");
 });
 
 export default router;

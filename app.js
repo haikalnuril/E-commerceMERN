@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -9,6 +10,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 import authRouter from './routes/authRouter.js';
