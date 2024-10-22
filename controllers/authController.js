@@ -1,6 +1,6 @@
 import user from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
-import asyncHandler from '../middlewares/asyncHanddler.js';
+import asyncHandler from '../middlewares/asyncHandler.js';
 
 const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -46,3 +46,49 @@ export const registerUser = asyncHandler(async (req, res) => {
 
     createSendResToken(createUser, 201, res);
 })
+
+export const loginUser = asyncHandler(async (req, res) => {
+    if (!req.body.email || !req.body.password) {
+        res.status(400)
+        throw new Error('Please provide email and password');
+    }
+
+    const userData = await user.findOne({
+        email: req.body.email,
+    })
+
+    if(userData && (await userData.matchPassword(req.body.password))) {
+        createSendResToken(userData, 200, res);
+    } else {
+        res.status(400)
+        throw new Error('Invalid email or password');
+    }
+})
+
+export const getCurrentUser = asyncHandler(async (req, res) => {
+    const userData = await user.findById(req.user.id).select('-password');
+
+    if(userData) {
+        res.status(200).json({
+            status: 'success',
+            data: {
+                user: userData,
+            }
+        })
+    } else {
+        res.status(404)
+        throw new Error('User not found');
+    }
+})
+
+export const logoutUser = async (req, res) => {
+    res.cookie('jwt', '', {
+        httpOnly: true,
+        expires: new Date(Date.now()),
+    })
+
+    res.status(200).json({
+        status: 'success',
+        message: 'User logged out',
+    })
+}
