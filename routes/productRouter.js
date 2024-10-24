@@ -8,6 +8,7 @@ import {
     deleteProduct,
     fileUpload,
 } from "../controllers/productController.js";
+import { upload } from "../utils/uploadFileHandler.js";
 
 const router = express.Router();
 
@@ -16,6 +17,6 @@ router.get("/", allProducts);
 router.get("/:id", detailProduct);
 router.put("/:id", protectedMiddleware, ownerMiddleware, updateProduct);
 router.delete("/:id", protectedMiddleware, ownerMiddleware, deleteProduct);
-router.post("/upload", fileUpload);
+router.post("/file-upload", protectedMiddleware, ownerMiddleware, upload.single('image'), fileUpload);
 
 export default router;

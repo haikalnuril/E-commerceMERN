@@ -92,5 +92,21 @@ export const deleteProduct = asyncHandler(async (req, res) => {
 })
 
 export const fileUpload = asyncHandler(async (req, res) => {
-    res.send("file upload");
+    const file = req.file;
+
+    if(!file) {
+        res.status(400);
+        throw new Error("Please upload a file");
+    }
+
+    const imageFileName = file.filename;
+    const pathImageFile = `/uploads/${imageFileName}`;
+
+    res.status(201).json({
+        status: "success",
+        message: "File uploaded successfully",
+        data: {
+            image: pathImageFile
+        }
+    })
 })
