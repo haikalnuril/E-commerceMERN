@@ -15,16 +15,34 @@ export const createProduct = asyncHandler(async (req, res) => {
 })
 
 export const allProducts = asyncHandler(async (req, res) => {
-    const products = await product.find({
+    const queryObj = { ...req.query };
 
-    });
+    //fungsi untuk mengabaikan req.query.page dan limit
+    const excludedFields = ['page', 'limit'];
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    let query = product.find(queryObj);
+
+    //pagination
+    const page = req.query.page * 1 || 1;
+    const limitData = req.query.limit * 1 || 10;
+    const skipData = (page-1) * limitData
+
+    query = query.skip(skipData).limit(limitData);
+
+    if(req.query.page) {
+        const totalData = await product.countDocuments();
+        if(skipData >= totalData) {
+            throw new Error("This page does not exist");
+        }
+    }
+
+    const data = await query;
 
     res.status(200).json({
         status: "success",
         message: "All products",
-        data: {
-            products
-        }
+        data
     })
 })
 
