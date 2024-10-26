@@ -18,10 +18,24 @@ export const allProducts = asyncHandler(async (req, res) => {
     const queryObj = { ...req.query };
 
     //fungsi untuk mengabaikan req.query.page dan limit
-    const excludedFields = ['page', 'limit'];
+    const excludedFields = ['page', 'limit', 'name'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    let query = product.find(queryObj);
+    let query
+
+    if(req.query.name) {
+        query = product.find({
+            name: {
+                $regex: req.query.name,
+                $options: 'i'
+            }
+        })
+    } else {
+        query = product.find(queryObj);
+    }
+
+
+
 
     //pagination
     const page = req.query.page * 1 || 1;
@@ -30,8 +44,8 @@ export const allProducts = asyncHandler(async (req, res) => {
 
     query = query.skip(skipData).limit(limitData);
 
+    const totalData = await product.countDocuments();
     if(req.query.page) {
-        const totalData = await product.countDocuments();
         if(skipData >= totalData) {
             throw new Error("This page does not exist");
         }
@@ -42,7 +56,8 @@ export const allProducts = asyncHandler(async (req, res) => {
     res.status(200).json({
         status: "success",
         message: "All products",
-        data
+        data,
+        count: totalData
     })
 })
 
