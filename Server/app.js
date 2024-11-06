@@ -5,12 +5,14 @@ import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import ExpressMongoSanitize from 'express-mongo-sanitize';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 const port = 3000;
 
+app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(ExpressMongoSanitize());
