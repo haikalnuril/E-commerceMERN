@@ -1,27 +1,13 @@
 import multer from "multer";
-import path from "path";
 
-const fileType = {
-    "image/png": "png",
-    "image/jpeg": "jpeg",
-    "image/jpg": "jpg",
-}
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const isValidFormat = fileType[file.mimetype];
-        let uploadError = new Error("Invalid image type");
-
-        if (isValidFormat) {
-            uploadError = null;
+export const upload = multer({
+    storage: multer.memoryStorage(),
+    fileFilter: function (req, file, cb) {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type. Only JPEG, PNG, and JPG files are allowed.'));
         }
-
-        cb(uploadError, "public/uploads");
-    },
-    filename: function (req, file, cb) {
-        const uniqueFile = `${Date.now()}-${file.originalname}`;
-        cb(null,uniqueFile);
-    },
+    }
 });
-
-export const upload = multer({ storage: storage });

@@ -17,6 +17,6 @@ router.get("/", allProducts);
 router.get("/:id", detailProduct);
 router.put("/:id", protectedMiddleware, ownerMiddleware, updateProduct);
 router.delete("/:id", protectedMiddleware, ownerMiddleware, deleteProduct);
-router.post("/file-upload", protectedMiddleware, ownerMiddleware, upload.single('image'), fileUpload);
+router.post("/file-upload/:id", protectedMiddleware, ownerMiddleware, upload.single('image'), fileUpload);
 
 export default router;

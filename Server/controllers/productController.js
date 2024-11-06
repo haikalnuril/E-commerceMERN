@@ -1,6 +1,8 @@
-import product from '../models/productModel.js';
+import product from "../models/productModel.js";
 // import jwt from 'jsonwebtoken';
-import asyncHandler from '../middlewares/asyncHandler.js';
+import asyncHandler from "../middlewares/asyncHandler.js";
+
+import imagekit from "../lib/imagekit.js";
 
 export const createProduct = asyncHandler(async (req, res) => {
     const newProduct = await product.create(req.body);
@@ -9,44 +11,41 @@ export const createProduct = asyncHandler(async (req, res) => {
         status: "success",
         message: "Product created successfully",
         data: {
-            product: newProduct
-        }
-    })
-})
+            product: newProduct,
+        },
+    });
+});
 
 export const allProducts = asyncHandler(async (req, res) => {
     const queryObj = { ...req.query };
 
     //fungsi untuk mengabaikan req.query.page dan limit
-    const excludedFields = ['page', 'limit', 'name'];
+    const excludedFields = ["page", "limit", "name"];
     excludedFields.forEach((el) => delete queryObj[el]);
 
-    let query
+    let query;
 
-    if(req.query.name) {
+    if (req.query.name) {
         query = product.find({
             name: {
                 $regex: req.query.name,
-                $options: 'i'
-            }
-        })
+                $options: "i",
+            },
+        });
     } else {
         query = product.find(queryObj);
     }
 
-
-
-
     //pagination
     const page = req.query.page * 1 || 1;
     const limitData = req.query.limit * 1 || 10;
-    const skipData = (page-1) * limitData
+    const skipData = (page - 1) * limitData;
 
     query = query.skip(skipData).limit(limitData);
 
     const totalData = await product.countDocuments();
-    if(req.query.page) {
-        if(skipData >= totalData) {
+    if (req.query.page) {
+        if (skipData >= totalData) {
             throw new Error("This page does not exist");
         }
     }
@@ -57,9 +56,9 @@ export const allProducts = asyncHandler(async (req, res) => {
         status: "success",
         message: "All products",
         data,
-        count: totalData
-    })
-})
+        count: totalData,
+    });
+});
 
 export const detailProduct = asyncHandler(async (req, res) => {
     const productDetail = await product.findById(req.params.id);
@@ -67,46 +66,46 @@ export const detailProduct = asyncHandler(async (req, res) => {
     if (!productDetail) {
         res.status(404).json({
             status: "failed",
-            message: "Product not found"
-        })
+            message: "Product not found",
+        });
     }
 
     res.status(200).json({
         status: "success",
         message: "Product detail",
         data: {
-            product: productDetail
-        }
-    })
-})
+            product: productDetail,
+        },
+    });
+});
 
 export const updateProduct = asyncHandler(async (req, res) => {
     const { name, price, description, image, category, stock } = req.body;
-    
+
     const updateProduct = await product.findByIdAndUpdate(req.params.id, {
         name,
         price,
         description,
         image,
         category,
-        stock
+        stock,
     });
 
     if (!updateProduct) {
         res.status(404).json({
             status: "failed",
-            message: "Product not found"
-        })
+            message: "Product not found",
+        });
     }
 
     res.status(200).json({
         status: "success",
         message: "Product updated successfully",
         data: {
-            updateProduct
-        }
-    })
-})
+            updateProduct,
+        },
+    });
+});
 
 export const deleteProduct = asyncHandler(async (req, res) => {
     const deleteProduct = await product.findByIdAndDelete(req.params.id);
@@ -114,32 +113,51 @@ export const deleteProduct = asyncHandler(async (req, res) => {
     if (!deleteProduct) {
         res.status(404).json({
             status: "failed",
-            message: "Product not found"
-        })
+            message: "Product not found",
+        });
     }
 
     res.status(200).json({
         status: "success",
-        message: "Product deleted successfully"
-    })
-})
+        message: "Product deleted successfully",
+    });
+});
 
 export const fileUpload = asyncHandler(async (req, res) => {
     const file = req.file;
 
-    if(!file) {
+    if (!file) {
         res.status(400);
         throw new Error("Please upload a file");
     }
 
-    const imageFileName = file.filename;
-    const pathImageFile = `/uploads/${imageFileName}`;
+    const split = file.originalname.split(".");
+    const ext = split[split.length - 1];
+    const filename = split[0];
+    const fileBuffer = file.buffer;
+    const fileName = `Product-${filename}-${Date.now()}.${ext}`;
+
+    const uploadedFile = await imagekit.upload({
+        file: fileBuffer,
+        fileName: fileName,
+    });
+
+    const imageUrl = uploadedFile.url;
+
+    const uploadProduct = await product.findByIdAndUpdate(
+        req.params.id,
+        { image: uploadedFile.url },
+        { new: true }
+    );
+
+    if (!uploadProduct) {
+        res.status(404);
+        throw new Error("Product not found");
+    }
 
     res.status(201).json({
         status: "success",
         message: "File uploaded successfully",
-        data: {
-            image: pathImageFile
-        }
-    })
-})
+        data: uploadProduct,
+    });
+});
