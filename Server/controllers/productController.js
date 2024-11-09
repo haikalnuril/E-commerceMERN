@@ -73,9 +73,7 @@ export const detailProduct = asyncHandler(async (req, res) => {
     res.status(200).json({
         status: "success",
         message: "Product detail",
-        data: {
-            product: productDetail,
-        },
+        data: productDetail,
     });
 });
 
