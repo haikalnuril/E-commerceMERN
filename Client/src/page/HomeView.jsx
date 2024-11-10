@@ -2,23 +2,16 @@ import axios from "axios";
 import customAPI from "../api";
 import { useEffect, useState } from "react";
 import CardProduct from "../components/CardProduct";
+import { useLoaderData } from "react-router-dom";
+
+export const loader = async () => {
+    const response = await customAPI.get("/products");
+    const products = response.data.data;
+    return { products };
+}
 
 const HomeView = () => {
-    const [products, setProducts] = useState([]);
-
-    const getProducts = async () => {
-        try {
-            const { data } = await customAPI.get("/products?limit=3");
-            setProducts(data.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
-        getProducts();
-    }, []);
-
+    const { products } = useLoaderData()
     return (
         <>
         <div>
@@ -27,7 +20,7 @@ const HomeView = () => {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
         {products.map((product) => (
-                <CardProduct product={product}/>
+                <CardProduct product={product} key={product._id}/>
         ))}
         </div>
         </>

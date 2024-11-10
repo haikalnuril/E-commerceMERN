@@ -13,6 +13,9 @@ import RegisterView from "./page/auth/RegisterView";
 import PublicLayout from "./Layouts/PublicLayout";
 import DetailProductView from "./page/DetailProductView";
 
+//loader
+import { loader as HomeLoader } from "./page/HomeView";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -21,6 +24,7 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomeView />,
+        loader: HomeLoader,
       },
       {
         path: "products",
