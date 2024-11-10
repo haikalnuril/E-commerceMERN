@@ -25,7 +25,7 @@ export const allProducts = asyncHandler(async (req, res) => {
 
     let query;
 
-    if (req.query.name) {
+    if ('name' in req.query) {
         query = product.find({
             name: {
                 $regex: req.query.name,

@@ -3,9 +3,10 @@ import customAPI from "../api";
 import { useEffect, useState } from "react";
 import CardProduct from "../components/CardProduct";
 import { useLoaderData } from "react-router-dom";
+import Hero from "../components/Hero";
 
 export const loader = async () => {
-    const response = await customAPI.get("/products");
+    const response = await customAPI.get("/products?limit=3");
     const products = response.data.data;
     return { products };
 }
@@ -15,6 +16,9 @@ const HomeView = () => {
     return (
         <>
         <div>
+            <Hero />
+        </div>
+        <div className="mt-5">
             <h1 className="text-3xl font-bold mb-3">All Product</h1>
             <hr className="mb-12"/>
         </div>
