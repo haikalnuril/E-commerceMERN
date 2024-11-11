@@ -1,5 +1,7 @@
+import FormAuth from "../../components/FormAuth";
+
 const RegisterView = () => {
-    return <div>RegisterView</div>;
+    return <FormAuth isRegister={true} />;
 };
 
 export default RegisterView;
