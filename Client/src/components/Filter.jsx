@@ -7,7 +7,7 @@ import { useLoaderData } from "react-router-dom";
 const Filter = () => {
     const {params} = useLoaderData();
     const {name, category} = params;
-    const categories = ["Shoes", "Clothes", "Electronics", "Books"];
+    const categories = ["shoes", "clothes", "electronics", "books"];
     return (
         <Form
             method="get"
