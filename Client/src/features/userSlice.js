@@ -1,10 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 const initialState = {
-    user: {
-        name: "Rezky",
-        email: "rezky@gmail.com"
-    }
+    user: JSON.parse(localStorage.getItem("user")) || null
 }
 
 const userSlice = createSlice({
@@ -12,11 +10,22 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         loginUser: (state, action) => {
-            state.user = action.payload;
+            const user = action.payload.data
+
+            //set niali dari state
+            state.user = user
+
+            //set nilai dari local storage
+            localStorage.setItem("user", JSON.stringify(user))
+        },
+        logoutUser: (state) => {
+            state.user = null
+            localStorage.removeItem("user")
+            toast.success("Logout Success")
         }
     }
 })
 
-export const {loginUser} = userSlice.actions
+export const {loginUser, logoutUser} = userSlice.actions
 
 export default userSlice.reducer

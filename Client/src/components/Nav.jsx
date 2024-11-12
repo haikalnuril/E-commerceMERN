@@ -4,8 +4,21 @@ import NavList from "./NavList";
 import { BsCart3 } from "react-icons/bs";
 import { Si4Chan } from "react-icons/si";
 import { FaBars } from "react-icons/fa6";
+import { useSelector, useDispatch } from "react-redux";
+import customAPI from "../api";
+import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../features/userSlice";
 
 const Nav = () => {
+    const user = useSelector((state) => state.userState.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handlingLogout = async () => {
+        await customAPI.get("/auth/logout");
+        dispatch(logoutUser());
+        navigate("/");
+    }
     return (
         <>
             <nav className="bg-base-200">
@@ -42,6 +55,9 @@ const Nav = () => {
                                 </span>
                             </div>
                         </NavLink>
+                        {user && (
+                            <button className="btn btn-error btn-outline btn-md" onClick={handlingLogout}>Logout</button>
+                        )}
                     </div>
                 </div>
             </nav>
