@@ -13,7 +13,7 @@ const FormAuth = (props) => {
                 <h4 className="text-center text-3xl font-bold">{isRegister ? "Register" : "Login"}</h4>
                 {
                     isRegister ? (
-                        <FormInput label="username" name="username" type="text" />
+                        <FormInput label="name" name="name" type="text" />
                     ) : null
                 }
                 <FormInput label="email" name="email" type="email" />

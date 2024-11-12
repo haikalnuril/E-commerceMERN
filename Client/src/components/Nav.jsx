@@ -56,7 +56,7 @@ const Nav = () => {
                             </div>
                         </NavLink>
                         {user && (
-                            <button className="btn btn-error btn-outline btn-md" onClick={handlingLogout}>Logout</button>
+                            <button className="ml-5 btn btn-accent btn-md" onClick={handlingLogout}>Logout</button>
                         )}
                     </div>
                 </div>
