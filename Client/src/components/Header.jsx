@@ -5,7 +5,7 @@ const Header = () => {
     const user = useSelector((state) => state.userState.user);
     return (
         <header className="bg-neutral py-2 text-neutral-content">
-            <div className="mx-auto nax-w-6xl px-8 flex justify-end">
+            <div className="mx-auto max-w-6xl px-8 flex justify-end">
                 {user ? (
                     <div className="flex gap-x-2 sm:gap-x-8 items-center">
                         <p className='text-xs sm:text-sm'>Hello, {user.user.name}</p>
