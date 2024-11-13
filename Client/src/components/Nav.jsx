@@ -48,6 +48,7 @@ const Nav = () => {
                         </div>
                     </div>
                     <div className="navbar-end">
+                        {user ? (
                         <NavLink to="/cart" className="btn btn-ghost btn-circle btn-md">
                             <div className="indicator">
                                 <BsCart3 />
@@ -56,6 +57,7 @@ const Nav = () => {
                                 </span>
                             </div>
                         </NavLink>
+                        ) : (null)}
                         {user && (
                             <button className="ml-5 btn btn-accent btn-md" onClick={handlingLogout}>Logout</button>
                         )}

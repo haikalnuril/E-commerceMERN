@@ -1,16 +1,17 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import customAPI from "../api";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { generateSelectAmount } from "../utils";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../features/cartSlice";
 
 const DetailProduct = () => {
     let { id } = useParams();
     const [product, setProduct] = useState({});
     const [amount, setAmount] = useState(1);
+    const user = useSelector((state) => state.userState.user);
 
     const dispatch = useDispatch();
 
@@ -29,7 +30,7 @@ const DetailProduct = () => {
     };
 
     const handleCart = () => {
-        dispatch(addItem({product: productCart}));
+        user ? dispatch(addItem({product: productCart})) : window.location.href = "/login";
     };
 
     const productData = async () => {

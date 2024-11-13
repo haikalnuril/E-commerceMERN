@@ -13,8 +13,8 @@ const CartTotal = () => {
                             ? cartTotal.toLocaleString("us-US", {
                                 style: "currency",
                                 currency: "USD",
-                              })
-                            : "Loading..."}
+                            })
+                            : "No Item in Cart"}
                     </span>
                 </p>
             </div>

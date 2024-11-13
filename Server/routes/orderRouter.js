@@ -12,7 +12,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", protectedMiddleware, ownerMiddleware, createOrder);
+router.post("/", protectedMiddleware, createOrder);
 router.get("/", protectedMiddleware, ownerMiddleware, allOrder);
 router.get("/:id", protectedMiddleware, ownerMiddleware, detailOrder);
 router.get("/current/user", protectedMiddleware, currentOrder);
