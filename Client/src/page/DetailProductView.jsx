@@ -4,18 +4,32 @@ import { useState, useEffect } from "react";
 import customAPI from "../api";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { generateSelectAmount } from "../utils";
+import { useDispatch } from "react-redux";
+import { addItem } from "../features/cartSlice";
 
 const DetailProduct = () => {
     let { id } = useParams();
     const [product, setProduct] = useState({});
     const [amount, setAmount] = useState(1);
 
+    const dispatch = useDispatch();
+
+    const productCart = {
+        cartId: product._id + product.name,
+        productId: product._id,
+        image: product.image,
+        name: product.name,
+        price: product.price,
+        stock: product.stock,
+        amount
+    }
+
     const handleAmount = (e) => {
         setAmount(parseInt(e.target.value));
     };
 
-    const handleClick = () => {
-        console.log(amount);
+    const handleCart = () => {
+        dispatch(addItem({product: productCart}));
     };
 
     const productData = async () => {
@@ -83,7 +97,7 @@ const DetailProduct = () => {
                             </label>
                             <button
                                 className="btn btn-primary"
-                                onClick={handleClick}
+                                onClick={handleCart}
                             >
                                 <MdOutlineShoppingCart /> Keranjang
                             </button>
