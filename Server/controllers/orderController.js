@@ -2,6 +2,8 @@ import asyncHandler from "../middlewares/asyncHandler.js";
 import Product from "../models/productModel.js";
 import Order from "../models/orderModel.js";
 import midtransClient from "midtrans-client";
+import dotenv from "dotenv";
+dotenv.config();
 
 let snap = new midtransClient.Snap({
     // Set to true if you want Production Environment (accept real transaction).
@@ -18,6 +20,7 @@ export const createOrder = asyncHandler(async (req, res) => {
     }
 
     let orderItem = [];
+    let orderMidtrans = [];
 
     let total = 0;
 
@@ -34,7 +37,15 @@ export const createOrder = asyncHandler(async (req, res) => {
             price,
             product: _id,
         };
+        const shortName = name.substring(0, 30);
+        const singleProductMidtrans = {
+            quantity: cart.quantity,
+            name : shortName,
+            price,
+            id: _id,
+        };
         orderItem = [...orderItem, singleProduct];
+        orderMidtrans = [...orderMidtrans, singleProductMidtrans];
 
         total += cart.quantity * price;
     }
@@ -54,7 +65,7 @@ export const createOrder = asyncHandler(async (req, res) => {
             order_id: order._id,
             gross_amount: total
         },
-        item_details: orderItem,
+        item_details: orderMidtrans,
         customer_details: {
             first_name: firstName,
             last_name: lastName,
