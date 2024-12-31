@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import dotenv from "dotenv";
 dotenv.config();
-import { Oauth2Client } from "google-auth-library";
 
 const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -96,48 +95,3 @@ export const logoutUser = async (req, res) => {
         message: "User logged out",
     });
 };
-
-export const googleOauth = asyncHandler(async (req, res) => {
-    res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-    res.header("Referrer-Policy", "no-referrer-when-downgrade");
-    const redirectUrl = "http://127.0.0.1:3000/oauth";
-    const client = new Oauth2Client(
-        process.env.CLIENT_ID,
-        process.env.CLIENT_SECRET,
-        redirectUrl
-    );
-
-    const authorizeUrl = client.generateAuthUrl({
-        access_type: "offline",
-        scope: ["https://www.googleapis.com/auth/userinfo.profile openid"],
-        prompt: "consent",
-    });
-
-    res.json({ url: authorizeUrl });
-});
-
-const getUserDataFromOauth = async (access_token) => {
-    const response = await fetch(
-        `https://www.googleapis.com/oauth2/v3/userinfo?alt=json&access_token=${access_token}`
-    );
-    const data = await response.json();
-    console.log("data", data);
-};
-
-export const googleOauthCallback = asyncHandler(async (req, res) => {
-    try {
-        const redirectUrl = "http://127.0.0.1:3000/oauth";
-        const Oauth2Client = new Oauth2Client(
-            process.env.CLIENT_ID,
-            process.env.CLIENT_SECRET,
-            redirectUrl
-        );
-        const res = await Oauth2Client.getToken(req.query.code);
-        await Oauth2Client.setCredentials(res.tokens);
-        const user = Oauth2Client.credentials;
-        console.log("user", user);
-        await getUserDataFromOauth(user.access_token);
-    } catch (error) {
-        console.log(error.message);
-    }
-});

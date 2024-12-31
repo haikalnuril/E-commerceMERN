@@ -5,25 +5,7 @@ import CardProduct from "../components/CardProduct";
 import { redirect, useLoaderData } from "react-router-dom";
 import Hero from "../components/Hero";
 
-const checkAccess = async () => {
-    try {
-        const response = await customAPI.get("/auth/getuser");
-        return response.data.data.user.role === "owner"; // Return true if the role is admin
-    } catch (error) {
-        if (error.response && error.response.status === 401) {
-            console.log("Unauthorized, redirecting to login...");
-            return false; // Unauthorized access
-        }
-        throw error; // Throw other errors to handle them separately if needed
-    }
-};
-
 export const loader = async () => {
-    const hasAccess = await checkAccess();
-    
-    if (!hasAccess) {
-        return redirect("/login"); // Corrected: Return the redirect to trigger navigation
-    }
     
     // Fetch products data if access is granted
     const response = await customAPI.get("/products?limit=3");
