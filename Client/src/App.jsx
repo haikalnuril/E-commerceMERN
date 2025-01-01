@@ -19,6 +19,7 @@ import NotFoundView from "./page/NotFoundView";
 //loader
 import { loader as HomeLoader } from "./page/HomeView";
 import { loader as ProductLoader } from "./page/ProductView";
+import { loader as OrderLoader } from "./page/OrderView";
 
 //action
 import { action as LoginAction } from "./page/auth/LoginView";
@@ -57,6 +58,7 @@ const router = createBrowserRouter([
       {
         path: "orders",
         element: <OrderView />,
+        loader: OrderLoader
       },
       {
         path: "checkout",
