@@ -30,7 +30,13 @@ export const createOrder = asyncHandler(async (req, res) => {
             res.status(400);
             throw new Error("Product not found");
         }
-        const { name, price, _id } = productData;
+        const { name, price, _id, stock } = productData;
+
+        if(cart.quantity > stock) {
+            res.status(404);
+            throw new Error(`Quantity ${name} is over from the stock`);
+        }
+
         const singleProduct = {
             quantity: cart.quantity,
             name,

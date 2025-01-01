@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import CardProduct from "../components/CardProduct";
 import { redirect, useLoaderData } from "react-router-dom";
 import Hero from "../components/Hero";
+import { checkAccess } from "../middlewares/ownerMiddleware";
 
 export const loader = async () => {
-    
+
     // Fetch products data if access is granted
     const response = await customAPI.get("/products?limit=3");
     const products = response.data.data;

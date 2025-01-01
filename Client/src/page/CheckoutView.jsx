@@ -1,9 +1,11 @@
 import CartTotal from "../components/CartTotal";
 import FormInput from "../components/Form/FormInput";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import customAPI from "../api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { clearItems } from "../features/cartSlice";
 
 const insertSnapScript = () => {
     return new Promise((resolve) => {
@@ -21,6 +23,9 @@ const insertSnapScript = () => {
 const CheckoutView = () => {
     const user = useSelector((state) => state.userState.user);
     const cart = useSelector((state) => state.cartState.CartItems);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         insertSnapScript();
@@ -55,6 +60,8 @@ const CheckoutView = () => {
             window.snap.pay(snapToken.token, {
                 // Optional
                 onSuccess: function (result) {
+                    dispatch(clearItems())
+                    navigate("/orders");
                     console.log(result);
                     alert("Berhasil");
                 },
@@ -72,7 +79,8 @@ const CheckoutView = () => {
 
             toast.success("Berhasil Checkout");
         } catch (error) {
-            console.log(error);
+            const errorMessage = error?.response?.data?.message
+            toast.error(errorMessage)
         }
     };
     return (

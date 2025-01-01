@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import customAPI from "../api";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../features/userSlice";
+import { clearItems } from "../features/cartSlice";
 
 const Nav = () => {
     const user = useSelector((state) => state.userState.user);
@@ -16,9 +17,16 @@ const Nav = () => {
     const navigate = useNavigate();
 
     const handlingLogout = async () => {
-        await customAPI.get("/auth/logout");
-        dispatch(logoutUser());
-        navigate("/");
+        try {
+            await customAPI.get("/auth/logout");
+            dispatch(logoutUser());
+            dispatch(clearItems())
+            navigate("/");
+        } catch (error) {
+            dispatch(logoutUser());
+            dispatch(clearItems())
+            navigate("/");
+        }
     }
     return (
         <>
