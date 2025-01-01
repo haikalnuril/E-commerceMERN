@@ -13,6 +13,8 @@ import RegisterView from "./page/auth/RegisterView";
 import PublicLayout from "./Layouts/PublicLayout";
 import DetailProductView from "./page/DetailProductView";
 import CheckoutView from "./page/CheckoutView";
+import UnauthorizedView from "./page/UnauthorizedView";
+import NotFoundView from "./page/NotFoundView";
 
 //loader
 import { loader as HomeLoader } from "./page/HomeView";
@@ -59,6 +61,14 @@ const router = createBrowserRouter([
       {
         path: "checkout",
         element: <CheckoutView />,
+      },
+      {
+        path: "unauthorized",
+        element: <UnauthorizedView />,
+      },
+      {
+        path: "*",
+        element: <NotFoundView />,
       }
     ]
   },

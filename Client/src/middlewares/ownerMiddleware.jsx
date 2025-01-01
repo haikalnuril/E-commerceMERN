@@ -6,8 +6,7 @@ export const checkAccess = async () => {
         return response.data.data.user.role === "owner"; 
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            console.log("Unauthorized, redirecting to login...");
-            return false;
+            return false
         }
         throw error;
     }
