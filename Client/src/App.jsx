@@ -13,6 +13,9 @@ import RegisterView from "./page/auth/RegisterView";
 import PublicLayout from "./Layouts/PublicLayout";
 import DetailProductView from "./page/DetailProductView";
 import CheckoutView from "./page/CheckoutView";
+import CreateProductView from "./page/CreateProductView";
+import EditProductView from "./page/EditProductView";
+
 import UnauthorizedView from "./page/UnauthorizedView";
 import NotFoundView from "./page/NotFoundView";
 
@@ -63,6 +66,14 @@ const router = createBrowserRouter([
       {
         path: "checkout",
         element: <CheckoutView />,
+      },
+      {
+        path: "product/create",
+        element: <CreateProductView />,
+      },
+      {
+        path: "product/:id/edit",
+        element: <EditProductView />,
       },
       {
         path: "unauthorized",
